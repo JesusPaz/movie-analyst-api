@@ -59,18 +59,24 @@ app.get("/reviewers", function(req, res, next) {
 });
 
 // Implement the publications API endpoint
-app.get("/publications", function(req, res) {
-  var publications = [
-    { name: "The Daily Reviewer", avatar: "glyphicon-eye-open" },
-    { name: "International Movie Critic", avatar: "glyphicon-fire" },
-    { name: "MoviesNow", avatar: "glyphicon-time" },
-    { name: "MyNextReview", avatar: "glyphicon-record" },
-    { name: "Movies n' Games", avatar: "glyphicon-heart-empty" },
-    { name: "TheOne", avatar: "glyphicon-globe" },
-    { name: "ComicBookHero.com", avatar: "glyphicon-flash" }
-  ];
+function getPublications(callback) {
+  connection.query("SELECT * FROM movie_db.publication", function(err, rows) {
+    callback(err, rows);
+  });
+}
 
-  res.json(publications);
+app.get("/publications", function(req, res, next) {
+  getPublications(function(err, publications) {
+    if (err) {
+      res.status(500).json({ message: err });
+    } else {
+      if (publications) {
+        res.status(200).json(publications);
+      } else {
+        res.status(409).json({ message: "Publications not found" });
+      }
+    }
+  });
 });
 
 // Implement the pending reviews API endpoint
