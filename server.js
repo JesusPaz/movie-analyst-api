@@ -1,6 +1,7 @@
 // Get our dependencies
 var express = require("express");
 var app = express();
+var publicIp = require("public-ip");
 var mysql = require("mysql");
 var connection = mysql.createConnection({
   host: process.env.DB_HOST || "localhost",
@@ -79,33 +80,17 @@ app.get("/publications", function(req, res, next) {
   });
 });
 
-// Implement the pending reviews API endpoint
-app.get("/pending", function(req, res) {
-  var pending = [
-    {
-      title: "Superman: Homecoming",
-      release: "2017",
-      score: 10,
-      reviewer: "Chris Harris",
-      publication: "International Movie Critic"
-    },
-    {
-      title: "Wonder Woman",
-      release: "2017",
-      score: 8,
-      reviewer: "Martin Thomas",
-      publication: "TheOne"
-    },
-    {
-      title: "Doctor Strange",
-      release: "2016",
-      score: 7,
-      reviewer: "Anthony Miller",
-      publication: "ComicBookHero.com"
-    }
-  ];
-  res.json(pending);
+// Implement server ip API endpoint
+app.get("/server_ip", async function(req, res) {
+  var ip = await publicIp.v4();
+
+  if (ip) {
+    res.status(200).json({ message: ip });
+  } else {
+    res.status(409).json({ message: "IP address not found" });
+  }
 });
+
 console.log("server listening through port: " + process.env.PORT);
 // Launch our API Server and have it listen on port 3000.
 app.listen(process.env.PORT || 3000);
