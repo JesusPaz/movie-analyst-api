@@ -3,18 +3,21 @@ var express = require("express");
 var app = express();
 var publicIp = require("public-ip");
 var mysql = require("mysql");
-var connection = mysql.createConnection({
-  host: process.env.DB_HOST || "localhost",
-  user: process.env.DB_USER || "applicationuser",
-  password: process.env.DB_PASS || "applicationuser",
-  database: process.env.DB_NAME || "movie_db"
-});
+var dotenv = require("dotenv").config({ path: "./docker/.env" });
 
+var connection = mysql.createConnection({
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASS,
+  database: process.env.DB_NAME
+});
 connection.connect();
 
-//Testing endpoint
+//Healthcheck
 app.get("/", function(req, res) {
-  res.status(200).json({ response: "hello" });
+  res
+    .status(200)
+    .json({ uptime: process.uptime(), message: "OK", timestamp: Date.now() });
 });
 
 // Implement the movies API endpoint
@@ -92,6 +95,5 @@ app.get("/server_ip", async function(req, res) {
 });
 
 console.log("server listening through port: " + process.env.PORT);
-// Launch our API Server and have it listen on port 3000.
-app.listen(process.env.PORT || 3000);
+app.listen(process.env.PORT);
 module.exports = app;
