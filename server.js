@@ -3,7 +3,7 @@ var express = require("express");
 var app = express();
 var publicIp = require("public-ip");
 var mysql = require("mysql");
-var dotenv = require("dotenv").config({ path: "./docker/.env" });
+var dotenv = require("dotenv").config();
 
 var connection = mysql.createConnection({
   host: process.env.DB_HOST,
