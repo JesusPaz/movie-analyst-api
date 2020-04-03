@@ -17,5 +17,3 @@ Application developed based on this post https://scotch.io/tutorials/building-an
 
         docker build -t jpazb/movie-api .
         docker run -p 3000:3000 -d jpazb/movie-api
-        docker run -it -d -p 3000:3000 jpazb/movie-api
-

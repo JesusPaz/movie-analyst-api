@@ -5,11 +5,6 @@ WORKDIR $WORKDIR
 COPY package*.json ./
 RUN npm install
 COPY . .
-
-FROM node:$NODE_VER as test
-ARG WORKDIR=/usr/src/app
-WORKDIR $WORKDIR
-COPY --from=build $WORKDIR .
 RUN npm test
 
 FROM node:$NODE_VER as release
