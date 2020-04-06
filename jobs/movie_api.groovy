@@ -1,13 +1,10 @@
-project_name = "jenkins-pipeline-movie-api"
-repo = "git@github.com:JesusPaz/movie-analyst-api.git"
-
-multibranchPipelineJob(project_name) {
+multibranchPipelineJob("jenkins-pipeline-movie-api") {
     triggers {
         periodic(1)
     }
     branchSources {
         git {
-            remote(repo)
+            remote("git@github.com:JesusPaz/movie-analyst-api.git")
         }
     }
     orphanedItemStrategy {
